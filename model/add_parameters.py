@@ -1,5 +1,5 @@
 
-import standard_params as prm
+from . import standard_params as prm
 
 def add_params(tr):
     

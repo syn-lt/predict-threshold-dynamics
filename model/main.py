@@ -3,23 +3,32 @@ import os, git
 
 from pypet import Environment, Trajectory
 
-from explored_params import explore_dict, name
-from add_parameters import add_params
-from model import run_model
+from .explored_params import explore_dict, name
+from .add_parameters import add_params
+from .model import run_model
 
 # control the number of cores to be used for computation
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--ncores", "-c", help="No. cores", nargs=1)
+parser.add_argument("--testrun", "-t", action='store_true')
 args = parser.parse_args()
 ncores = int(args.ncores[0])
 print("Using {:d} cores".format(ncores))
 
-# get info on git repository
-repo = git.Repo('./')
-commit = repo.commit(None)
-filename = os.path.join('../data', name+'_'+str(commit)[:6]+'.hdf5')
+# check the state of the git repository
+repo = git.Repo('./code/')
 
+if not args.testrun:
+    # check for changes, while ignoring submodules
+    if repo.git.status('-s', '--ignore-submodules'):
+        raise pex.GitDiffError('Found not committed changes!')
+
+    commit = repo.commit(None)
+
+filename = os.path.join(os.getcwd(), 'data/', name+'.hdf5')
+
+    
 # if not the first run, tr2 will be merged later
 label = 'tr1'
 first_run = True
