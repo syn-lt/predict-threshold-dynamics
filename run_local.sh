@@ -25,6 +25,7 @@ else
 fi
 
 cp code/run_analysis.sh .
+./run_analysis.sh
 
 echo "Done."
 
