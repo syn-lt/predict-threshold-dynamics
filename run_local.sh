@@ -9,7 +9,7 @@ touch sbatch.out
 rm sbatch.out
 
 #python main.py -c $3
-srun -p x-men -c $4 --mem $5 --time 29-00 python main.py -c $3
+python main.py -c $3
 #python xstrct_run.py -c $3
 #srun -p x-men -c $4 --mem $5 python hello_world.py --c $3
 
