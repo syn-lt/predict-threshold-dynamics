@@ -1,43 +1,41 @@
 #!/bin/sh
 
-cd code/
-
+echo ""
+echo ""
 echo "Running " $1
+echo ""
 
-# make sure sbatch.out doesn't exist
-touch sbatch.out
-rm sbatch.out
-
-#python main.py -c $3
-python main.py -c $3
-#python xstrct_run.py -c $3
-#srun -p x-men -c $4 --mem $5 python hello_world.py --c $3
-
-echo "Simulation finished."
-
+if $8
+then
+    TESTFLAG='-t'
+    DESTINATION='tests'
+else
+    TESTFLAG=''
+    DESTINATION='completed'
+fi
 
 
-# # with multiprocessing. currently defunct because of a problem
-# # with tex locking and memory consumption issues
-# srun -p x-men -c $4 --mem $5 python default_analysis.py data/*.hdf5 $3
-
-# final zero sys.argv sets mode to sequential
-cd ../
+if $6
+then
+   echo "doing local"
+   python -m code.model.main -c $3 $TESTFLAG
+else
+   echo "doing nonlocal"
+   srun -p $7 -c $4 --mem $5 --time 29-00 python -m code.model.main -c $3 $TESTFLAG
+fi
 
 cp code/run_analysis.sh .
-./run_analysis.sh
 
-# echo "Running analysis..."
-# mv code/run_analysis.sh .
-# ./run_analysis.sh 
+echo "Done."
+
+CRDIR=$(pwd);
+
+mkdir -p ../../$DESTINATION/
+mv $CRDIR ../../$DESTINATION/$1
+
+#echo "Not cleaning up, remove manually"
 
 
-# rm -rf builds/
-# # echo "Copying data..."
-# # cp data/* $2/../data/
 
-# # echo "Copying nohup.out..."
-# # cp nohup.out $2/../data/$1.out
 
-# echo "Done."
-# #echo "Not cleaning up, remove manually"
+
