@@ -50,6 +50,8 @@ env = Environment(trajectory=label,
 
 tr = env.trajectory
 
+add_params(tr)
+
 if not args.testrun:
     tr.f_add_parameter('mconfig.git.sha1', str(commit))
     tr.f_add_parameter('mconfig.git.message', commit.message)
