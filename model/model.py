@@ -70,7 +70,7 @@ def run_model(tr):
             kx.append([kx_v,tr.Nsteps-t])
 
         
-    raw_dir = '../data/%.4d/'%(tr.v_idx)
+    raw_dir = './data/%.4d/'%(tr.v_idx)
     
     if not os.path.exists(raw_dir):
         os.makedirs(raw_dir)
